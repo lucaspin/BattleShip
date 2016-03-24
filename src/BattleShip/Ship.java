@@ -12,12 +12,8 @@ public class Ship {
     private final int MIN_DIMENSION = 1;
     private final int MAX_DIMENSION = 4;
 
-    // Expose the valid directions
-    public static final String VERTICAL = "VERTICAL";
-    public static final String HORIZONTAL = "HORIZONTAL";
-
     private int dimension;
-    private String orientation;
+    private ShipOrientations orientation;
     private Cell startPosition;
     private ArrayList<ShipCell> parts;
 
@@ -27,30 +23,15 @@ public class Ship {
      * @param orientation the orientation of the ship
      * @param startPosition the start position of the ship
      */
-    public Ship(int dimension, String orientation, Cell startPosition) {
+    public Ship(int dimension, ShipOrientations orientation, Cell startPosition) {
         // TODO: check if startPosition is valid as well (maybe check this on Grid, instead of here)
-        if (this.isValidDimension(dimension) && this.isValidOrientation(orientation) && startPosition != null) {
+        if (this.isValidDimension(dimension) && startPosition != null) {
             this.dimension = dimension;
             this.orientation = orientation;
             this.startPosition = startPosition;
         } else {
             System.out.println("[BattleShip.Ship.constructor] Invalid parameters");
         }
-    }
-
-    /**
-     * Check if the given orientation is valid
-     * @param orientation the orientation to check
-     * @return valid if the given orientation is valid
-     */
-    private boolean isValidOrientation(String orientation) {
-        boolean valid = false;
-
-        if (Objects.equals(orientation, Ship.VERTICAL) || Objects.equals(orientation, Ship.HORIZONTAL)) {
-            valid = true;
-        }
-
-        return valid;
     }
 
     /**
@@ -80,7 +61,7 @@ public class Ship {
      * Get the ship's orientation
      * @return orientation the orientation of this ship
      */
-    public String getOrientation() {
+    public ShipOrientations getOrientation() {
         return this.orientation;
     }
 

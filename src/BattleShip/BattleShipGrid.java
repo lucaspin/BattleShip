@@ -195,8 +195,7 @@ public class BattleShipGrid {
         // TODO: check for NON_EMPTY cells
 
         switch(ship.getOrientation()) {
-            case Ship.VERTICAL:
-
+            case HORIZONTAL:
                 if (this.canShipBeVerticalllyDrawn(ship)) {
                     int yPoint = ship.getStartPosition().getY();
                     int xPoint = ship.getStartPosition().getX();
@@ -211,8 +210,7 @@ public class BattleShipGrid {
                 }
 
                 break;
-            case Ship.HORIZONTAL:
-
+            case VERTICAL:
                 if (this.canShipBeHorizontallyDrawn(ship)) {
                     int yPoint = ship.getStartPosition().getY();
                     int xPoint = ship.getStartPosition().getX();
@@ -228,7 +226,5 @@ public class BattleShipGrid {
 
                 break;
         }
-
     }
-
 }
