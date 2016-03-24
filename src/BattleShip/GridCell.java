@@ -7,7 +7,7 @@ public class GridCell extends Cell {
 
     private boolean empty = false;
     private boolean alreadyGuessed = false;
-    private GridCellDisplayValue displayValue = GridCellDisplayValue.NO_GUESS;
+    private GridCellDisplayValues displayValue = GridCellDisplayValues.NO_GUESS;
 
     /**
      * Constructor of the class
@@ -54,7 +54,7 @@ public class GridCell extends Cell {
      * Set the new display value of the GridCell
      * @param displayValue {String}
      */
-    public void setDisplayValue(GridCellDisplayValue displayValue) {
+    public void setDisplayValue(GridCellDisplayValues displayValue) {
        this.displayValue = displayValue;
     }
 
@@ -62,7 +62,7 @@ public class GridCell extends Cell {
      * Get the display value of the cell
      * @return displayValue {String}
      */
-    public GridCellDisplayValue getDisplayValue() {
+    public GridCellDisplayValues getDisplayValue() {
         return this.displayValue;
     }
 }
