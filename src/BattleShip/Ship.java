@@ -1,6 +1,5 @@
 package BattleShip;
 
-import java.util.Objects;
 import java.util.ArrayList;
 
 /**
@@ -30,7 +29,7 @@ public class Ship {
             this.orientation = orientation;
             this.startPosition = startPosition;
         } else {
-            System.out.println("[BattleShip.Ship.constructor] Invalid parameters");
+            System.out.println("[Ship.constructor] Invalid parameters");
         }
     }
 

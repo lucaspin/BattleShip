@@ -126,36 +126,6 @@ public class BattleShipGrid {
     }
 
     /**
-     * Check whether a ship can be placed in the grid vertically
-     * @param ship the ship to check
-     * @return {Boolean}
-     */
-    private boolean canShipBeVerticalllyDrawn(Ship ship) {
-        boolean canShipBeDrawn = false;
-
-        if ((this.getVerticalDimension() - ship.getStartPosition().getX()) >= ship.getDimension()) {
-            canShipBeDrawn = true;
-        }
-
-        return canShipBeDrawn;
-    }
-
-    /**
-     * Check whether a ship can be drawn horizontally
-     * @param ship the ship to check
-     * @return canBeDrawn if the ship can be drawn
-     */
-    private boolean canShipBeHorizontallyDrawn(Ship ship) {
-        boolean canBeDrawn = false;
-
-        if (this.getHorizontalDimension() - ship.getStartPosition().getY() >= ship.getDimension()) {
-            canBeDrawn = true;
-        }
-
-        return canBeDrawn;
-    }
-
-    /**
      * Check whether a ship's start position is valid or not
      * @param ship the ship to check
      * @return isValidPosition if startPosition is valid
@@ -182,8 +152,13 @@ public class BattleShipGrid {
 
             // Update the number of occupied cells
             this.occupiedCellsCurrentNumber += ship.getDimension();
+
+            // Check if the number of max occupied cells has not been reached
+            if (this.occupiedCellsCurrentNumber >= this.occupiedCellsMaxNumber) {
+                this.setFull(true);
+            }
         } else {
-            System.out.println("[BattleShip.BattleShipGrid.addShip] the startPosition of the ship isn't part of the grid");
+            System.out.println("[BattleShipGrid.addShip] the startPosition of the ship isn't part of the grid");
         }
     }
 
@@ -192,38 +167,28 @@ public class BattleShipGrid {
      * @param ship the ship to set parts
      */
     private void setShipParts(Ship ship) {
-        // TODO: check for NON_EMPTY cells
+        int xPoint;
+        int yPoint;
 
         switch(ship.getOrientation()) {
             case HORIZONTAL:
-                if (this.canShipBeVerticalllyDrawn(ship)) {
-                    int yPoint = ship.getStartPosition().getY();
-                    int xPoint = ship.getStartPosition().getX();
+                yPoint = ship.getStartPosition().getY();
+                xPoint = ship.getStartPosition().getX();
 
-                    for (int count = 0; count <= ship.getDimension(); count++, yPoint++) {
-                        ShipCell newShipPart = new ShipCell(xPoint, yPoint);
-                        ship.addPart(newShipPart);
-                    }
-
-                } else {
-                    System.out.println("[BattleShip.BattleShipGrid.setShipParts] the ship can't be drawn");
+                for (int count = 0; count <= ship.getDimension(); count++, yPoint++) {
+                    ShipCell newShipPart = new ShipCell(xPoint, yPoint);
+                    ship.addPart(newShipPart);
                 }
 
                 break;
             case VERTICAL:
-                if (this.canShipBeHorizontallyDrawn(ship)) {
-                    int yPoint = ship.getStartPosition().getY();
-                    int xPoint = ship.getStartPosition().getX();
+                yPoint = ship.getStartPosition().getY();
+                xPoint = ship.getStartPosition().getX();
 
-                    for (int count = 0; count <= ship.getDimension(); count++, xPoint++) {
-                        ShipCell newShipPart = new ShipCell(xPoint, yPoint);
-                        ship.addPart(newShipPart);
-                    }
-
-                } else {
-                    System.out.println("[BattleShip.BattleShipGrid.setShipParts] the ship can't be drawn");
+                for (int count = 0; count <= ship.getDimension(); count++, xPoint++) {
+                    ShipCell newShipPart = new ShipCell(xPoint, yPoint);
+                    ship.addPart(newShipPart);
                 }
-
                 break;
         }
     }
