@@ -18,7 +18,6 @@ public class Ship {
      * @param startPosition the start position of the ship
      */
     public Ship(ShipDimensions dimension, ShipOrientations orientation, Cell startPosition) {
-        // TODO: check if startPosition is valid as well (maybe check this on Grid, instead of here)
         if (startPosition != null) {
             this.dimension = dimension;
             this.orientation = orientation;

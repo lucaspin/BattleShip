@@ -1,5 +1,10 @@
 package main.java;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 /**
  * @author lucaspinheiro
  */
@@ -11,12 +16,31 @@ public enum ShipDimensions {
     FIVE(5);
 
     private int dimension;
+    private static final List<ShipDimensions> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
+    private static final int SIZE = VALUES.size();
+    private static final Random RANDOM = new Random();
 
+    /**
+     * @constructor
+     * @param dimension {int}
+     */
     ShipDimensions(int dimension) {
         this.dimension = dimension;
     }
 
-    int getValue() {
+    /**
+     * Get the dimension value
+     * @return dimension {dimension}
+     */
+    public int getValue() {
         return this.dimension;
+    }
+
+    /**
+     * Get a random dimension
+     * @return a random ship dimension
+     */
+    static ShipDimensions getRandomDimension() {
+       return VALUES.get(RANDOM.nextInt(SIZE));
     }
 }

@@ -1,9 +1,6 @@
 package main.java;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * @author lucaspinheiro
@@ -205,14 +202,32 @@ public class BattleShipGame {
 
     /**
      * Generate a new ship, fetching it from
-     * @return ship {Ship}
+     * @return newShip {Ship}
      */
     private Ship fetchShipFromValidPositionsMap() {
-        // TODO: generate a dimension
-        // TODO: generate an orientation
-        // TODO: get startPosition from the map that matches the generations above
-        // TODO: create ship and return it
-        return null;
+        ShipDimensions randomDimension = ShipDimensions.getRandomDimension();
+        ShipOrientations randomOrientation = ShipOrientations.getRandomOrientation();
+        Cell startPosition = null;
+        Random randomNumber = new Random();
+        int randomIndex;
+
+        // Get startPosition from the right map
+        if (randomDimension == ShipDimensions.ONE) {
+            randomIndex = randomNumber.nextInt(this.validPositionsForUnitShip.size());
+            startPosition = this.validPositionsForUnitShip.get(randomIndex);
+        } else if (randomOrientation == ShipOrientations.HORIZONTAL) {
+            ArrayList<Cell> validPositions = this.validHorizontalPositionsMap.get(randomDimension.getValue());
+            randomIndex = randomNumber.nextInt(validPositions.size());
+            startPosition = validPositions.get(randomIndex);
+        } else if (randomOrientation == ShipOrientations.VERTICAL) {
+            ArrayList<Cell> validPositions = this.validVerticalPositionsMap.get(randomDimension.getValue());
+            randomIndex = randomNumber.nextInt(validPositions.size());
+            startPosition = validPositions.get(randomIndex);
+        }
+
+        Ship newShip = new Ship(randomDimension, randomOrientation, startPosition);
+
+        return newShip;
     }
 
     /**
