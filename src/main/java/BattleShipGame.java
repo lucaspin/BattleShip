@@ -188,7 +188,7 @@ public class BattleShipGame {
             this.grid.addShip(newShip);
 
             // Get new ship info
-            int dimension = newShip.getDimension();
+            int dimension = newShip.getDimension().getValue();
             ShipOrientations orientation = newShip.getOrientation();
             Cell startPosition = newShip.getStartPosition();
 

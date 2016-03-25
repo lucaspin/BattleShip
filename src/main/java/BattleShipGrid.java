@@ -151,7 +151,7 @@ public class BattleShipGrid {
             this.ships.add(ship);
 
             // Update the number of occupied cells
-            this.occupiedCellsCurrentNumber += ship.getDimension();
+            this.occupiedCellsCurrentNumber += ship.getDimension().getValue();
 
             // Check if the number of max occupied cells has not been reached
             if (this.occupiedCellsCurrentNumber >= this.occupiedCellsMaxNumber) {
@@ -175,7 +175,7 @@ public class BattleShipGrid {
                 yPoint = ship.getStartPosition().getY();
                 xPoint = ship.getStartPosition().getX();
 
-                for (int count = 0; count <= ship.getDimension(); count++, yPoint++) {
+                for (int count = 0; count <= ship.getDimension().getValue(); count++, yPoint++) {
                     ShipCell newShipPart = new ShipCell(xPoint, yPoint);
                     ship.addPart(newShipPart);
                 }
@@ -185,7 +185,7 @@ public class BattleShipGrid {
                 yPoint = ship.getStartPosition().getY();
                 xPoint = ship.getStartPosition().getX();
 
-                for (int count = 0; count <= ship.getDimension(); count++, xPoint++) {
+                for (int count = 0; count <= ship.getDimension().getValue(); count++, xPoint++) {
                     ShipCell newShipPart = new ShipCell(xPoint, yPoint);
                     ship.addPart(newShipPart);
                 }

@@ -6,12 +6,7 @@ import java.util.ArrayList;
  * @author lucaspinheiro
  */
 public class Ship {
-    // Constants that hold the dimension limits
-    // TODO: calculate these based on grid's dimension
-    private final int MIN_DIMENSION = 1;
-    private final int MAX_DIMENSION = 4;
-
-    private int dimension;
+    private ShipDimensions dimension;
     private ShipOrientations orientation;
     private Cell startPosition;
     private ArrayList<ShipCell> parts;
@@ -22,9 +17,9 @@ public class Ship {
      * @param orientation the orientation of the ship
      * @param startPosition the start position of the ship
      */
-    public Ship(int dimension, ShipOrientations orientation, Cell startPosition) {
+    public Ship(ShipDimensions dimension, ShipOrientations orientation, Cell startPosition) {
         // TODO: check if startPosition is valid as well (maybe check this on Grid, instead of here)
-        if (this.isValidDimension(dimension) && startPosition != null) {
+        if (startPosition != null) {
             this.dimension = dimension;
             this.orientation = orientation;
             this.startPosition = startPosition;
@@ -34,25 +29,10 @@ public class Ship {
     }
 
     /**
-     * Check if the given dimension is valid
-     * @param dimension the dimension to check
-     * @return isValidDimension true if dimension is valid
-     */
-    private boolean isValidDimension(int dimension) {
-        boolean isValidDimension = false;
-
-        if (dimension >= MIN_DIMENSION && dimension <= MAX_DIMENSION) {
-            isValidDimension = true;
-        }
-
-        return isValidDimension;
-    }
-
-    /**
      * Get the ship dimension
      * @return dimension the dimension of the ship
      */
-    public int getDimension() {
+    public ShipDimensions getDimension() {
         return this.dimension;
     }
 
@@ -77,7 +57,7 @@ public class Ship {
      * @param newPart the new part of the ship to be added
      */
     public void addPart(ShipCell newPart) {
-        if (newPart != null && this.parts.size() < this.dimension) {
+        if (newPart != null && this.parts.size() < this.dimension.getValue()) {
             this.parts.add(newPart);
         }
     }
