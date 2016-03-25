@@ -1,4 +1,4 @@
-package BattleShip;
+package main.java;
 
 /**
  * @author lucaspinheiro
