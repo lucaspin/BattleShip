@@ -1,5 +1,6 @@
 package main.java;
 
+import java.util.List;
 import java.util.ArrayList;
 
 /**
@@ -9,7 +10,7 @@ public class Ship {
     private ShipDimensions dimension;
     private ShipOrientations orientation;
     private Cell startPosition;
-    private ArrayList<GridCell> parts = new ArrayList<>();
+    private List<GridCell> parts = new ArrayList<>();
 
     /**
      * @constructor
@@ -73,7 +74,7 @@ public class Ship {
      * Get the ship's parts
      * @return parts the parts of the ship
      */
-    public ArrayList<GridCell> getParts() {
+    public List<GridCell> getParts() {
        return this.parts;
     }
 

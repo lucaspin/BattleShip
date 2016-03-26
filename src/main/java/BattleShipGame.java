@@ -1,8 +1,12 @@
 package main.java;
 
-import java.io.InputStreamReader;
-import java.util.*;
 import java.util.regex.Pattern;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Scanner;
+import java.util.Random;
 
 /**
  * @author lucaspinheiro

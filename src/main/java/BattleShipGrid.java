@@ -1,5 +1,6 @@
 package main.java;
 
+import java.util.List;
 import java.util.ArrayList;
 
 /**
@@ -12,7 +13,7 @@ public class BattleShipGrid {
     private int occupiedCellsCurrentNumber;
     private boolean full = false;
     private GridCell[][] grid;
-    private ArrayList<Ship> ships = new ArrayList<>();
+    private List<Ship> ships = new ArrayList<>();
 
     // Expose constants to limit the dimensions of the grid
     public static final int MIN_VERTICAL_DIMENSION = 5;
@@ -102,7 +103,7 @@ public class BattleShipGrid {
      * Get the grid's current ships
      * @return ships the non-destroyed ships in the grid
      */
-    public ArrayList<Ship> getShips() {
+    public List<Ship> getShips() {
         return this.ships;
     }
 
