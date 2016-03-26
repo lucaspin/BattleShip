@@ -9,7 +9,7 @@ public class Ship {
     private ShipDimensions dimension;
     private ShipOrientations orientation;
     private Cell startPosition;
-    private ArrayList<ShipCell> parts = new ArrayList<>();
+    private ArrayList<GridCell> parts = new ArrayList<>();
 
     /**
      * @constructor
@@ -55,29 +55,25 @@ public class Ship {
      * Add a new part to the ship
      * @param newPart the new part of the ship to be added
      */
-    public void addPart(ShipCell newPart) {
+    public void addPart(GridCell newPart) {
         if (newPart != null && this.parts.size() < this.dimension.getValue()) {
             this.parts.add(newPart);
         }
     }
 
     /**
-     * Hit a part of the ship
-     * @param part the part to hit
+     * Remove a part of a ship. Used when the user hits that part
+     * @param partToRemove the part of the ship to remove
      */
-    public void hitPart(ShipCell part) {
-        int index = this.parts.indexOf(part);
-
-        // TODO: check if part really belongs to the ship
-        ShipCell partToUpdate = this.parts.get(index);
-        partToUpdate.setHit(true);
+    public void removePart(GridCell partToRemove) {
+        this.parts.remove(partToRemove);
     }
 
     /**
      * Get the ship's parts
      * @return parts the parts of the ship
      */
-    public ArrayList<ShipCell> getParts() {
+    public ArrayList<GridCell> getParts() {
        return this.parts;
     }
 

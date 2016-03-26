@@ -5,7 +5,7 @@ package main.java;
  */
 public class GridCell extends Cell {
 
-    private boolean empty = false;
+    private boolean empty = true;
     private boolean alreadyGuessed = false;
     private GridCellDisplayValues displayValue = GridCellDisplayValues.NO_GUESS;
 

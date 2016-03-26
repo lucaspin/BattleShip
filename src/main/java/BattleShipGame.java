@@ -1,6 +1,8 @@
 package main.java;
 
+import java.io.InputStreamReader;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @author lucaspinheiro
@@ -12,6 +14,9 @@ public class BattleShipGame {
     // This variable will hold the reference to the grid
     private BattleShipGrid grid;
 
+    // The pattern that will aplly to the user guess
+    private String PATTERN_USER_GUESS = "^\\d{1,2}-\\d{1,2}$";
+
     // This list will hold the valid positions for ships of a dimension of 1 unit
     private List<Cell> validPositionsForUnitShip = new ArrayList<>();
 
@@ -20,6 +25,8 @@ public class BattleShipGame {
 
     // This map will hold the valid positions for horizontal ships of 1+ dimensions
     private Map<ShipDimensions, ArrayList<Cell>> validHorizontalPositionsMap = new HashMap<>();
+
+    private Scanner SCANNER = new Scanner(System.in);
 
     /**
      * @constructor
@@ -252,13 +259,49 @@ public class BattleShipGame {
     }
 
     public void initGame() {
-        // initialize game
+        Cell userGuess = null;
+
         while(!this.isEnded()) {
-            // TODO: get guess
-            // TODO: check if guess has hit some ship
-            // TODO: update grid accordingly
+            userGuess = null;
+
+            while (userGuess == null) {
+                userGuess = this.getUserGuess();
+            }
+
+            GridCell guessedCell = this.grid.getGrid()[userGuess.getX()][userGuess.getY()];
+
+            if (guessedCell.isAlreadyGuessed()) {
+                System.out.println("==> You have already guessed this cell!");
+            } else if (guessedCell.isEmpty()) {
+                System.out.println("==> You hit water!");
+                guessedCell.setAlreadyGuessed(true);
+                guessedCell.setDisplayValue(GridCellDisplayValues.GUESS_EMPTY);
+            } else {
+                System.out.println("==> You got a hit!");
+                guessedCell.setAlreadyGuessed(true);
+                guessedCell.setDisplayValue(GridCellDisplayValues.GUESS_NON_EMPTY);
+
+                // Find the ship to which that cell belongs
+                Ship hitShip = null;
+
+                for (Ship ship : this.grid.getShips()) {
+                    for (GridCell shipPart : ship.getParts()) {
+                        if (shipPart.getX() == guessedCell.getX() && shipPart.getY() == guessedCell.getY()) {
+                            hitShip = ship;
+                        }
+                    }
+                }
+
+                // Remove the ship
+                if (hitShip != null) {
+                    hitShip.removePart(guessedCell);
+                }
+            }
+
+            this.grid.displayGrid();
         }
 
+        SCANNER.close();
     }
 
     /**
@@ -313,19 +356,29 @@ public class BattleShipGame {
 
     /**
      * Ask the user for a guess
-     * @return guess {String}
+     * @return guess {Cell}
      */
-    public String askForGuess() {
-        Scanner input = new Scanner(System.in);
-        String guess;
+    public Cell getUserGuess() {
+        Cell userGuessCell = null;
+        String guess = null;
 
-        guess = input.nextLine();
+        System.out.println("Inform your next guess: ");
+        guess = SCANNER.nextLine();
 
-        // TODO: check and format guess, returning a Cell
+        // Check if user guess follows the pattern
+        if (Pattern.matches(PATTERN_USER_GUESS, guess)) {
+            int splitPoint = guess.indexOf("-");
+            int xPoint = Integer.parseInt(guess.substring(0, splitPoint));
+            int yPoint = Integer.parseInt(guess.substring(splitPoint + 1));
 
-        input.close();
+            userGuessCell = new Cell(xPoint, yPoint);
+        } else {
+            System.out.println("==> Your guess does not follow the supported format.");
+            System.out.println("==> Remember: A guess must be a number followed by a hiphen followed by a number.");
+            userGuessCell = null;
+        }
 
-        return guess;
+        return userGuessCell;
     }
 
     /**

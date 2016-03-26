@@ -167,29 +167,32 @@ public class BattleShipGrid {
      * @param ship the ship to set parts
      */
     private void setShipParts(Ship ship) {
-        int xPoint;
-        int yPoint;
+        int xPoint = ship.getStartPosition().getX();
+        int yPoint = ship.getStartPosition().getY();
 
         switch(ship.getOrientation()) {
             case HORIZONTAL:
-                yPoint = ship.getStartPosition().getY();
-                xPoint = ship.getStartPosition().getX();
-
-                for (int count = 0; count <= ship.getDimension().getValue(); count++, yPoint++) {
-                    ShipCell newShipPart = new ShipCell(xPoint, yPoint);
+                for (int count = 0; count <= ship.getDimension().getValue(); count++, xPoint++) {
+                    GridCell newShipPart = new GridCell(xPoint, yPoint);
                     ship.addPart(newShipPart);
+                    this.grid[xPoint][yPoint].setEmpty(false);
                 }
-
                 break;
             case VERTICAL:
-                yPoint = ship.getStartPosition().getY();
-                xPoint = ship.getStartPosition().getX();
-
-                for (int count = 0; count <= ship.getDimension().getValue(); count++, xPoint++) {
-                    ShipCell newShipPart = new ShipCell(xPoint, yPoint);
+                for (int count = 0; count <= ship.getDimension().getValue(); count++, yPoint++) {
+                    GridCell newShipPart = new GridCell(xPoint, yPoint);
                     ship.addPart(newShipPart);
+                    this.grid[xPoint][yPoint].setEmpty(false);
                 }
                 break;
         }
+    }
+
+    /**
+     * Get the grid itself
+     * @return grid the grid itself
+     */
+    public GridCell[][] getGrid() {
+        return this.grid;
     }
 }
