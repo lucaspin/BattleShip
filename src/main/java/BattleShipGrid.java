@@ -12,7 +12,7 @@ public class BattleShipGrid {
     private int occupiedCellsCurrentNumber;
     private boolean full = false;
     private GridCell[][] grid;
-    private ArrayList<Ship> ships;
+    private ArrayList<Ship> ships = new ArrayList<>();
 
     // Expose constants to limit the dimensions of the grid
     public static final int MIN_VERTICAL_DIMENSION = 5;

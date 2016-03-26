@@ -297,11 +297,11 @@ public class BattleShipGame {
             randomIndex = randomNumber.nextInt(this.validPositionsForUnitShip.size());
             startPosition = this.validPositionsForUnitShip.get(randomIndex);
         } else if (randomOrientation == ShipOrientations.HORIZONTAL) {
-            ArrayList<Cell> validPositions = this.validHorizontalPositionsMap.get(randomDimension.getValue());
+            ArrayList<Cell> validPositions = this.validHorizontalPositionsMap.get(randomDimension);
             randomIndex = randomNumber.nextInt(validPositions.size());
             startPosition = validPositions.get(randomIndex);
         } else if (randomOrientation == ShipOrientations.VERTICAL) {
-            ArrayList<Cell> validPositions = this.validVerticalPositionsMap.get(randomDimension.getValue());
+            ArrayList<Cell> validPositions = this.validVerticalPositionsMap.get(randomDimension);
             randomIndex = randomNumber.nextInt(validPositions.size());
             startPosition = validPositions.get(randomIndex);
         }

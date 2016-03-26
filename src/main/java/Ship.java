@@ -9,7 +9,7 @@ public class Ship {
     private ShipDimensions dimension;
     private ShipOrientations orientation;
     private Cell startPosition;
-    private ArrayList<ShipCell> parts;
+    private ArrayList<ShipCell> parts = new ArrayList<>();
 
     /**
      * @constructor
