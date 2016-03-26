@@ -10,7 +10,7 @@ public class Ship {
     private ShipDimensions dimension;
     private ShipOrientations orientation;
     private Cell startPosition;
-    private List<GridCell> parts = new ArrayList<>();
+    private List<Cell> parts = new ArrayList<>();
 
     /**
      * @constructor
@@ -56,7 +56,7 @@ public class Ship {
      * Add a new part to the ship
      * @param newPart the new part of the ship to be added
      */
-    public void addPart(GridCell newPart) {
+    public void addPart(Cell newPart) {
         if (newPart != null && this.parts.size() < this.dimension.getValue()) {
             this.parts.add(newPart);
         }
@@ -74,7 +74,7 @@ public class Ship {
      * Get the ship's parts
      * @return parts the parts of the ship
      */
-    public List<GridCell> getParts() {
+    public List<Cell> getParts() {
        return this.parts;
     }
 

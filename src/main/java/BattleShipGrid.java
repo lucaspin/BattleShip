@@ -27,8 +27,8 @@ public class BattleShipGrid {
      * @param verticalDimension the vertical dimension of the grid
      */
     public BattleShipGrid(int horizontalDimension, int verticalDimension) {
-        // TODO: Improve this check
-        if (horizontalDimension > 0 && verticalDimension > 0) {
+        if (horizontalDimension >= MIN_HORIZONTAL_DIMENSION && horizontalDimension <= MAX_HORIZONTAL_DIMENSION &&
+            verticalDimension >= MIN_VERTICAL_DIMENSION && verticalDimension <= MAX_VERTICAL_DIMENSION) {
             this.verticalDimension = verticalDimension;
             this.horizontalDimension = horizontalDimension;
             this.initGrid();
@@ -55,8 +55,7 @@ public class BattleShipGrid {
      * Set the max number of occupied cells, according to the grid's dimension
      */
     private void setOccupiedCellsMaxNumber() {
-        // TODO: accept a difficulty parameter, instead of setting 0.6 directly
-        this.occupiedCellsMaxNumber = Math.round((float) 0.6 * this.verticalDimension * this.horizontalDimension);
+        this.occupiedCellsMaxNumber = Math.round((float) 0.4 * this.verticalDimension * this.horizontalDimension);
     }
 
     /**
@@ -174,7 +173,7 @@ public class BattleShipGrid {
         switch(ship.getOrientation()) {
             case HORIZONTAL:
                 for (int count = 0; count <= ship.getDimension().getValue(); count++, xPoint++) {
-                    GridCell newShipPart = new GridCell(xPoint, yPoint);
+                    Cell newShipPart = new Cell(xPoint, yPoint);
                     ship.addPart(newShipPart);
                     this.grid[xPoint][yPoint].setEmpty(false);
                 }

@@ -289,7 +289,7 @@ public class BattleShipGame {
                 Ship hitShip = null;
 
                 for (Ship ship : this.grid.getShips()) {
-                    for (GridCell shipPart : ship.getParts()) {
+                    for (Cell shipPart : ship.getParts()) {
                         if (shipPart.getX() == guessedCell.getX() && shipPart.getY() == guessedCell.getY()) {
                             hitShip = ship;
                         }
@@ -299,10 +299,14 @@ public class BattleShipGame {
                 // Remove the ship
                 if (hitShip != null) {
                     hitShip.removePart(guessedCell);
+
+                    // TODO: If ship was destroyed, remove it from grid
                 }
             }
 
             this.grid.displayGrid();
+
+            // TODO: Check if the game has ended
         }
 
         SCANNER.close();
@@ -375,7 +379,13 @@ public class BattleShipGame {
             int xPoint = Integer.parseInt(guess.substring(0, splitPoint));
             int yPoint = Integer.parseInt(guess.substring(splitPoint + 1));
 
-            userGuessCell = new Cell(xPoint, yPoint);
+            if (xPoint < this.grid.getHorizontalDimension() && yPoint < this.grid.getVerticalDimension()) {
+                userGuessCell = new Cell(xPoint, yPoint);
+            } else {
+                System.out.println("==> Your guess does not fit into this grid!");
+                userGuessCell = null;
+            }
+
         } else {
             System.out.println("==> Your guess does not follow the supported format.");
             System.out.println("==> Remember: A guess must be a number followed by a hiphen followed by a number.");
