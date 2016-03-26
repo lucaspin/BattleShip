@@ -6,7 +6,6 @@ import java.util.*;
  * @author lucaspinheiro
  */
 public class BattleShipGame {
-
     // This variable will indicate if the game has ended
     private boolean ended = false;
 
@@ -17,10 +16,10 @@ public class BattleShipGame {
     private List<Cell> validPositionsForUnitShip = new ArrayList<>();
 
     // This map will hold the valid positions for vertical ships of 1+ dimensions
-    private HashMap<Integer, ArrayList<Cell>> validVerticalPositionsMap = new HashMap<>();
+    private Map<ShipDimensions, ArrayList<Cell>> validVerticalPositionsMap = new HashMap<>();
 
     // This map will hold the valid positions for horizontal ships of 1+ dimensions
-    private HashMap<Integer, ArrayList<Cell>> validHorizontalPositionsMap = new HashMap<Integer, ArrayList<Cell>>();
+    private Map<ShipDimensions, ArrayList<Cell>> validHorizontalPositionsMap = new HashMap<>();
 
     /**
      * @constructor
@@ -62,69 +61,49 @@ public class BattleShipGame {
 
     /**
      * Update the valid vertical positions map for 1+ dimension after a ship insertion
-     * @param cell the start position of the ship that was just inserted
-     * @param dimension the dimension of the ship that was just inserted
+     * @param newShip the ship that was just added
      */
-    private void updateValidPositionsForUnitShip(Cell cell, int dimension) {
-        // TODO
+    private void updateValidPositionsForUnitShip(Ship newShip) {
+        ShipOrientations newShipOrientation = newShip.getOrientation();
+        ShipDimensions newShipDimension = newShip.getDimension();
+        Cell startPosition = newShip.getStartPosition();
+        int xStartPoint = startPosition.getX();
+        int yStartPoint = startPosition.getY();
+
+        if (newShipDimension == ShipDimensions.ONE) {
+            this.validPositionsForUnitShip.remove(startPosition);
+        } else if (newShipOrientation == ShipOrientations.VERTICAL){
+            for (int count = yStartPoint; count <= newShipDimension.getValue(); count++) {
+                Cell cellToRemove = new Cell(xStartPoint, count);
+                this.validPositionsForUnitShip.remove(cellToRemove);
+            }
+        } else if (newShipOrientation == ShipOrientations.HORIZONTAL) {
+            for (int count = xStartPoint; count <= newShipDimension.getValue(); count++) {
+                Cell cellToRemove = new Cell(count, yStartPoint);
+                this.validPositionsForUnitShip.remove(cellToRemove);
+            }
+        }
+
     }
 
     /**
      * Create the valid vertical positions map for ships +1 dimension
      */
     private void createVerticalValidPositionsMap() {
-        this.validVerticalPositionsMap.put(2, this.calculateInitialValidVerticalPositions(2));
-        this.validVerticalPositionsMap.put(3, this.calculateInitialValidVerticalPositions(3));
-        this.validVerticalPositionsMap.put(4, this.calculateInitialValidVerticalPositions(4));
-        this.validVerticalPositionsMap.put(5, this.calculateInitialValidVerticalPositions(5));
+        this.validVerticalPositionsMap.put(ShipDimensions.TWO, this.calculateInitialValidVerticalPositions(2));
+        this.validVerticalPositionsMap.put(ShipDimensions.THREE, this.calculateInitialValidVerticalPositions(3));
+        this.validVerticalPositionsMap.put(ShipDimensions.FOUR, this.calculateInitialValidVerticalPositions(4));
+        this.validVerticalPositionsMap.put(ShipDimensions.FIVE, this.calculateInitialValidVerticalPositions(5));
     }
 
     /**
      * Create the valid horizontal positions map for ships +1 dimension
      */
     private void createHorizontalValidPositionsMap() {
-        this.validHorizontalPositionsMap.put(2, this.calculateInitialValidHorizontalPositions(2));
-        this.validHorizontalPositionsMap.put(3, this.calculateInitialValidHorizontalPositions(3));
-        this.validHorizontalPositionsMap.put(4, this.calculateInitialValidHorizontalPositions(4));
-        this.validHorizontalPositionsMap.put(5, this.calculateInitialValidHorizontalPositions(5));
-    }
-
-    /**
-     * Build the lists of valid start positions for a vertical ship based on its dimension
-     * @param dimension the dimension of the ship
-     * @return validPositionsList {ArrayList}
-     */
-    private ArrayList<Cell> calculateInitialValidVerticalPositions(int dimension) {
-        ArrayList<Cell> validPositionsList = new ArrayList<Cell>();
-
-        for (int x = 0; x < this.grid.getHorizontalDimension(); x++) {
-            for (int y = 0; y < (this.grid.getVerticalDimension() - dimension); y++) {
-                Cell validCell = new Cell(x, y);
-                validPositionsList.add(validCell);
-            }
-        }
-
-        return validPositionsList;
-    }
-
-    /**
-     * Update the valid vertical positions map for 1+ dimension after a ship insertion
-     * @param cell the start position of the ship that was just inserted
-     * @param dimension the dimension of the ship that was just inserted
-     * @param orientation the orientation of the ship that was just inserted
-     */
-    private void updateValidVerticalPositionsMap(Cell cell, int dimension, ShipOrientations orientation) {
-
-        switch(orientation) {
-            case HORIZONTAL:
-                // TODO: remove the ship parts and (n - 1) to the left of the start position
-                break;
-            case VERTICAL:
-                // TODO: remove the ship parts and (n - 1) to the left of all its parts
-                break;
-        }
-
-        // TODO: remember to check for grid bounds when doing this
+        this.validHorizontalPositionsMap.put(ShipDimensions.TWO, this.calculateInitialValidHorizontalPositions(2));
+        this.validHorizontalPositionsMap.put(ShipDimensions.THREE, this.calculateInitialValidHorizontalPositions(3));
+        this.validHorizontalPositionsMap.put(ShipDimensions.FOUR, this.calculateInitialValidHorizontalPositions(4));
+        this.validHorizontalPositionsMap.put(ShipDimensions.FIVE, this.calculateInitialValidHorizontalPositions(5));
     }
 
     /**
@@ -146,22 +125,129 @@ public class BattleShipGame {
     }
 
     /**
-     * Update the valid horizontal positions map for 1+ dimension after a ship insertion
-     * @param cell the start position of the ship that was just inserted
-     * @param dimension the dimension of the ship that was just inserted
-     * @param orientation the orientation of the ship that was just inserted
+     * Build the lists of valid start positions for a vertical ship based on its dimension
+     * @param dimension the dimension of the ship
+     * @return validPositionsList {ArrayList}
      */
-    private void updateValidHorizontalPositionsMap(Cell cell, int dimension, ShipOrientations orientation) {
+    private ArrayList<Cell> calculateInitialValidVerticalPositions(int dimension) {
+        ArrayList<Cell> validPositionsList = new ArrayList<>();
 
-        switch(orientation) {
+        for (int x = 0; x < this.grid.getHorizontalDimension(); x++) {
+            for (int y = 0; y < (this.grid.getVerticalDimension() - dimension); y++) {
+                Cell validCell = new Cell(x, y);
+                validPositionsList.add(validCell);
+            }
+        }
+
+        return validPositionsList;
+    }
+
+    /**
+     * Update the valid vertical positions map for 1+ dimension after a ship insertion
+     * @param newShip the ship that was just added
+     */
+    private void updateValidVerticalPositionsMap(Ship newShip) {
+        ShipDimensions newShipDimension = newShip.getDimension();
+
+        switch(newShip.getOrientation()) {
             case HORIZONTAL:
-                // TODO: remove the ship parts and (n - 1) to the left of the start position
+                for (ShipDimensions key : this.validVerticalPositionsMap.keySet()) {
+                    this.updateDiffDirectionValidPositionsList(key, newShip, ShipOrientations.VERTICAL);
+                }
                 break;
             case VERTICAL:
-                // TODO: remove the ship parts and (n - 1) to the left of all its parts
+                for (ShipDimensions key : this.validHorizontalPositionsMap.keySet()) {
+                    this.updateSameDirectionValidPositionsLists(key, newShip, ShipOrientations.HORIZONTAL);
+                }
                 break;
+        }
+    }
 
-            // TODO: remember to check for grid bounds when doing this
+    /**
+     * Update valid positions lists when the direction of the ship that was added is the same
+     * direction of the map we are updating
+     * @param key the key of some dimension valid map
+     * @param newShip the ship that was just added
+     * @param orientation the orientation of the lists we want to update
+     */
+    private void updateSameDirectionValidPositionsLists(ShipDimensions key, Ship newShip, ShipOrientations orientation) {
+        int shipDimension = newShip.getDimension().getValue();
+        int yStartPoint = newShip.getStartPosition().getY();
+        int xStartPoint = newShip.getStartPosition().getX();
+        int keyDimension = key.getValue();
+        int count;
+
+        switch(orientation) {
+            case VERTICAL:
+                count = (yStartPoint + shipDimension - 1);
+
+                for ( ; count > (yStartPoint - keyDimension) && count >= 0; count--) {
+                    Cell cellToRemove = new Cell(xStartPoint, count);
+                    this.validVerticalPositionsMap.get(key).remove(cellToRemove);
+                }
+                break;
+            case HORIZONTAL:
+                count = (xStartPoint + shipDimension - 1);
+
+                for ( ; count > (xStartPoint - keyDimension) && count >= 0; count--) {
+                    Cell cellToRemove = new Cell(count, yStartPoint);
+                    this.validVerticalPositionsMap.get(key).remove(cellToRemove);
+                }
+                break;
+        }
+    }
+
+    /**
+     * Update valid positions lists when the direction of the ship that was added is different
+     * from the direction of map we are updating
+     * @param key the key of some dimension map
+     * @param newShip the ship that was just added
+     * @param orientation the orientation of the map we want to update
+     */
+    private void updateDiffDirectionValidPositionsList(ShipDimensions key, Ship newShip, ShipOrientations orientation) {
+        int shipDimension = newShip.getDimension().getValue();
+        int yStartPoint = newShip.getStartPosition().getY();
+        int xStartPoint = newShip.getStartPosition().getX();
+        int keyDimension = key.getValue();
+
+        switch (orientation) {
+            case HORIZONTAL:
+                for (int yCount = yStartPoint; yCount < shipDimension; yCount++) {
+                    for (int xCount = xStartPoint; (xCount > xStartPoint - keyDimension) && xCount >= 0; xCount--) {
+                        Cell cellToRemove = new Cell(xCount, yCount);
+                        this.validVerticalPositionsMap.get(key).remove(cellToRemove);
+                    }
+                }
+                break;
+            case VERTICAL:
+                for (int xCount = xStartPoint; xCount < shipDimension; xCount++) {
+                    for (int yCount = yStartPoint; (yCount > yStartPoint - keyDimension) && yCount >= 0; yCount--) {
+                        Cell cellToRemove = new Cell(xCount, yCount);
+                        this.validVerticalPositionsMap.get(key).remove(cellToRemove);
+                    }
+                }
+
+                break;
+        }
+    }
+
+
+    /**
+     * Update the valid horizontal positions map for 1+ dimension after a ship insertion
+     * @param newShip the ship that was just added
+     */
+    private void updateValidHorizontalPositionsMap(Ship newShip) {
+        switch(newShip.getOrientation()) {
+            case HORIZONTAL:
+                for (ShipDimensions key : this.validVerticalPositionsMap.keySet()) {
+                    this.updateSameDirectionValidPositionsLists(key, newShip, ShipOrientations.HORIZONTAL);
+                }
+                break;
+            case VERTICAL:
+                for (ShipDimensions key : this.validHorizontalPositionsMap.keySet()) {
+                    this.updateDiffDirectionValidPositionsList(key, newShip, ShipOrientations.HORIZONTAL);
+                }
+                break;
         }
     }
 
@@ -184,15 +270,10 @@ public class BattleShipGame {
             Ship newShip = this.fetchShipFromValidPositionsMap();
             this.grid.addShip(newShip);
 
-            // Get new ship info
-            int dimension = newShip.getDimension().getValue();
-            ShipOrientations orientation = newShip.getOrientation();
-            Cell startPosition = newShip.getStartPosition();
-
             // Update the valid positions
-            this.updateValidPositionsForUnitShip(startPosition, dimension);
-            this.updateValidHorizontalPositionsMap(startPosition, dimension, orientation);
-            this.updateValidVerticalPositionsMap(startPosition, dimension, orientation);
+            this.updateValidPositionsForUnitShip(newShip);
+            this.updateValidHorizontalPositionsMap(newShip);
+            this.updateValidVerticalPositionsMap(newShip);
         }
     }
 

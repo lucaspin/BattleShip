@@ -1,5 +1,7 @@
 package main.java;
 
+import java.util.Objects;
+
 /**
  * @author lucaspinheiro
  */
@@ -59,5 +61,23 @@ public class Cell {
      */
     public int getY() {
         return this.y;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        // Return true if object is compared to itself
+        if (o == this) {
+            return true;
+        }
+
+        // Return false if object is not of type Cell
+        if (!(o instanceof Cell)) {
+            return false;
+        }
+
+        // Cast o and compare the attributes
+        Cell cellToCompare = (Cell) o;
+        return this.x == cellToCompare.getX() && this.y == cellToCompare.getY();
     }
 }
