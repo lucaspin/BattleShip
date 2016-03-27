@@ -42,9 +42,34 @@ public class BattleShipGrid {
      * Function that draws the grid in the terminal
      */
     public void displayGrid() {
+        System.out.printf("%2s |", "");
+
+        for (int count = 0; count < this.verticalDimension; count++) {
+            System.out.printf("%2d |", count);
+        }
+
+        System.out.println();
+
         for (int verticalCount = 0; verticalCount < this.verticalDimension; verticalCount++) {
             for (int horizontalCount = 0; horizontalCount < this.horizontalDimension; horizontalCount++) {
-                System.out.print(this.grid[horizontalCount][verticalCount].getDisplayValue().getValue() + " ");
+
+                if (horizontalCount == 0) {
+
+                    // Display the separators
+                    for (int count = 0; count <= this.horizontalDimension; count++) {
+                        System.out.printf("%1s%1s", "–––", "");
+                    }
+
+                    // Go to next line
+                    System.out.println();
+                }
+
+                if (horizontalCount == 0) {
+                    System.out.printf("%2s |", verticalCount);
+                }
+
+                // Print the symbols
+                System.out.printf("%2s |", this.grid[horizontalCount][verticalCount].getDisplayValue().getValue());
             }
             System.out.print("\n");
         }
@@ -172,14 +197,14 @@ public class BattleShipGrid {
 
         switch(ship.getOrientation()) {
             case HORIZONTAL:
-                for (int count = 0; count <= ship.getDimension().getValue(); count++, xPoint++) {
+                for (int count = 0; count < ship.getDimension().getValue(); count++, xPoint++) {
                     Cell newShipPart = new Cell(xPoint, yPoint);
                     ship.addPart(newShipPart);
                     this.grid[xPoint][yPoint].setEmpty(false);
                 }
                 break;
             case VERTICAL:
-                for (int count = 0; count <= ship.getDimension().getValue(); count++, yPoint++) {
+                for (int count = 0; count < ship.getDimension().getValue(); count++, yPoint++) {
                     GridCell newShipPart = new GridCell(xPoint, yPoint);
                     ship.addPart(newShipPart);
                     this.grid[xPoint][yPoint].setEmpty(false);

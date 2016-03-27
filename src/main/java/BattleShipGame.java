@@ -46,6 +46,8 @@ public class BattleShipGame {
 
             // Populate the grid
             this.populateGrid();
+
+            this.grid.displayGrid();
         }
     }
 
@@ -125,7 +127,7 @@ public class BattleShipGame {
     private ArrayList<Cell> calculateInitialValidHorizontalPositions(int dimension) {
         ArrayList<Cell> validPositionsList = new ArrayList<Cell>();
 
-        for (int x = 0; x < (this.grid.getHorizontalDimension() - dimension); x++) {
+        for (int x = 0; x < (this.grid.getHorizontalDimension() - dimension + 1); x++) {
             for (int y = 0; y < this.grid.getVerticalDimension(); y++) {
                 Cell validCell = new Cell(x, y);
                 validPositionsList.add(validCell);
@@ -144,7 +146,7 @@ public class BattleShipGame {
         ArrayList<Cell> validPositionsList = new ArrayList<>();
 
         for (int x = 0; x < this.grid.getHorizontalDimension(); x++) {
-            for (int y = 0; y < (this.grid.getVerticalDimension() - dimension); y++) {
+            for (int y = 0; y < (this.grid.getVerticalDimension() - dimension + 1); y++) {
                 Cell validCell = new Cell(x, y);
                 validPositionsList.add(validCell);
             }

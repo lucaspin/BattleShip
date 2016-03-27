@@ -4,7 +4,7 @@ package main.java;
  * @author lucaspinheiro
  */
 public enum GridCellDisplayValues {
-    NO_GUESS("-"),
+    NO_GUESS(" "),
     GUESS_EMPTY("*"),
     GUESS_NON_EMPTY("X");
 
