@@ -188,6 +188,14 @@ public class BattleShipGrid {
     }
 
     /**
+     * Remove a ship from the grid when it is destroyed
+     * @param ship the ship to remove from the grid
+     */
+    public void removeShip(Ship ship) {
+        this.ships.remove(ship);
+    }
+
+    /**
      * Set where in the grid a ship is going to be
      * @param ship the ship to set parts
      */

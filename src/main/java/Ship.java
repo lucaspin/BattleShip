@@ -78,4 +78,24 @@ public class Ship {
        return this.parts;
     }
 
+    @Override
+    public boolean equals (Object o) {
+
+        // if it is the same object
+        if (o == this) {
+            return true;
+        }
+
+        // if the object is not of class Ship
+        if (!(o instanceof Ship)) {
+            return false;
+        }
+
+        // Cast object to type Ship
+        Ship ship = (Ship) o;
+
+        // Check the properties
+        return this.startPosition.getX() == ship.getStartPosition().getX()
+               && this.startPosition.getY() == ship.getStartPosition().getY();
+    }
 }

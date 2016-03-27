@@ -302,13 +302,21 @@ public class BattleShipGame {
                 if (hitShip != null) {
                     hitShip.removePart(guessedCell);
 
-                    // TODO: If ship was destroyed, remove it from grid
+                    // Check if ship was destroyed
+                    if (hitShip.getParts().size() == 0) {
+                        System.out.println("==> Congrats! You destroyed a ship!");
+                        this.grid.removeShip(hitShip);
+                    }
+
+                    // Check if game has ended
+                    if (this.grid.getShips().size() == 0) {
+                        System.out.println("==> You destroyed all the ships! Game over!");
+                        this.setEnded(true);
+                    }
                 }
             }
 
             this.grid.displayGrid();
-
-            // TODO: Check if the game has ended
         }
 
         SCANNER.close();
