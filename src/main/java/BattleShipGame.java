@@ -46,9 +46,22 @@ public class BattleShipGame {
 
             // Populate the grid
             this.populateGrid();
-
+            this.displayGameInfo();
             this.grid.displayGrid();
         }
+    }
+
+    /**
+     * Display information about the game to the user
+     */
+    private void displayGameInfo() {
+        System.out.println();
+        System.out.println("==> Welcome to BattleShip!");
+        System.out.println("==> There are " + this.grid.getShips().size() + " ships in the grid");
+        System.out.println("==> Your job is to destroy them all!");
+        System.out.println("==> To guess a position of the grid, you should use this format: {number}-{number}");
+        System.out.println("==> Good luck!");
+        System.out.println();
     }
 
     /**
@@ -77,26 +90,9 @@ public class BattleShipGame {
      * @param newShip the ship that was just added
      */
     private void updateValidPositionsForUnitShip(Ship newShip) {
-        ShipOrientations newShipOrientation = newShip.getOrientation();
-        ShipDimensions newShipDimension = newShip.getDimension();
-        Cell startPosition = newShip.getStartPosition();
-        int xStartPoint = startPosition.getX();
-        int yStartPoint = startPosition.getY();
-
-        if (newShipDimension == ShipDimensions.ONE) {
-            this.validPositionsForUnitShip.remove(startPosition);
-        } else if (newShipOrientation == ShipOrientations.VERTICAL){
-            for (int count = yStartPoint; count <= newShipDimension.getValue(); count++) {
-                Cell cellToRemove = new Cell(xStartPoint, count);
-                this.validPositionsForUnitShip.remove(cellToRemove);
-            }
-        } else if (newShipOrientation == ShipOrientations.HORIZONTAL) {
-            for (int count = xStartPoint; count <= newShipDimension.getValue(); count++) {
-                Cell cellToRemove = new Cell(count, yStartPoint);
-                this.validPositionsForUnitShip.remove(cellToRemove);
-            }
+        for (Cell part : newShip.getParts()) {
+            this.validPositionsForUnitShip.remove(part);
         }
-
     }
 
     /**
@@ -169,8 +165,8 @@ public class BattleShipGame {
                 }
                 break;
             case VERTICAL:
-                for (ShipDimensions key : this.validHorizontalPositionsMap.keySet()) {
-                    this.updateSameDirectionValidPositionsLists(key, newShip, ShipOrientations.HORIZONTAL);
+                for (ShipDimensions key : this.validVerticalPositionsMap.keySet()) {
+                    this.updateSameDirectionValidPositionsLists(key, newShip, ShipOrientations.VERTICAL);
                 }
                 break;
         }
@@ -204,7 +200,7 @@ public class BattleShipGame {
 
                 for ( ; count > (xStartPoint - keyDimension) && count >= 0; count--) {
                     Cell cellToRemove = new Cell(count, yStartPoint);
-                    this.validVerticalPositionsMap.get(key).remove(cellToRemove);
+                    this.validHorizontalPositionsMap.get(key).remove(cellToRemove);
                 }
                 break;
         }
@@ -222,20 +218,22 @@ public class BattleShipGame {
         int yStartPoint = newShip.getStartPosition().getY();
         int xStartPoint = newShip.getStartPosition().getX();
         int keyDimension = key.getValue();
+        int horizDimension = this.grid.getHorizontalDimension();
+        int vertDimension = this.grid.getVerticalDimension();
 
         switch (orientation) {
             case HORIZONTAL:
-                for (int yCount = yStartPoint; yCount < shipDimension; yCount++) {
+                for (int yCount = 0; yCount < shipDimension; yCount++, yStartPoint++) {
                     for (int xCount = xStartPoint; (xCount > xStartPoint - keyDimension) && xCount >= 0; xCount--) {
-                        Cell cellToRemove = new Cell(xCount, yCount);
-                        this.validVerticalPositionsMap.get(key).remove(cellToRemove);
+                        Cell cellToRemove = new Cell(xCount, yStartPoint);
+                        this.validHorizontalPositionsMap.get(key).remove(cellToRemove);
                     }
                 }
                 break;
             case VERTICAL:
-                for (int xCount = xStartPoint; xCount < shipDimension; xCount++) {
+                for (int xCount = 0; xCount < shipDimension; xCount++, xStartPoint++) {
                     for (int yCount = yStartPoint; (yCount > yStartPoint - keyDimension) && yCount >= 0; yCount--) {
-                        Cell cellToRemove = new Cell(xCount, yCount);
+                        Cell cellToRemove = new Cell(xStartPoint, yCount);
                         this.validVerticalPositionsMap.get(key).remove(cellToRemove);
                     }
                 }
@@ -252,7 +250,7 @@ public class BattleShipGame {
     private void updateValidHorizontalPositionsMap(Ship newShip) {
         switch(newShip.getOrientation()) {
             case HORIZONTAL:
-                for (ShipDimensions key : this.validVerticalPositionsMap.keySet()) {
+                for (ShipDimensions key : this.validHorizontalPositionsMap.keySet()) {
                     this.updateSameDirectionValidPositionsLists(key, newShip, ShipOrientations.HORIZONTAL);
                 }
                 break;
@@ -306,6 +304,7 @@ public class BattleShipGame {
                     if (hitShip.getParts().size() == 0) {
                         System.out.println("==> Congrats! You destroyed a ship!");
                         this.grid.removeShip(hitShip);
+                        System.out.println("==> There are " + this.grid.getShips().size() + " remaining.");
                     }
 
                     // Check if game has ended
@@ -329,12 +328,14 @@ public class BattleShipGame {
     private void populateGrid() {
         while(!this.grid.isFull()) {
             Ship newShip = this.fetchShipFromValidPositionsMap();
-            this.grid.addShip(newShip);
+            if (newShip != null) {
+                this.grid.addShip(newShip);
 
-            // Update the valid positions
-            this.updateValidPositionsForUnitShip(newShip);
-            this.updateValidHorizontalPositionsMap(newShip);
-            this.updateValidVerticalPositionsMap(newShip);
+                // Update the valid positions
+                this.updateValidPositionsForUnitShip(newShip);
+                this.updateValidHorizontalPositionsMap(newShip);
+                this.updateValidVerticalPositionsMap(newShip);
+            }
         }
     }
 
@@ -359,15 +360,35 @@ public class BattleShipGame {
             startPosition = this.validPositionsForUnitShip.get(randomIndex);
         } else if (randomOrientation == ShipOrientations.HORIZONTAL) {
             ArrayList<Cell> validPositions = this.validHorizontalPositionsMap.get(randomDimension);
-            randomIndex = randomNumber.nextInt(validPositions.size());
-            startPosition = validPositions.get(randomIndex);
+
+            // Check if there are still available positions at this list
+            // TODO: find a better way to do this
+            if (validPositions.size() > 0) {
+                randomIndex = randomNumber.nextInt(validPositions.size());
+                startPosition = validPositions.get(randomIndex);
+            } else {
+                startPosition = null;
+            }
         } else if (randomOrientation == ShipOrientations.VERTICAL) {
             ArrayList<Cell> validPositions = this.validVerticalPositionsMap.get(randomDimension);
-            randomIndex = randomNumber.nextInt(validPositions.size());
-            startPosition = validPositions.get(randomIndex);
+
+            // Check if there are still available positions at this list
+            // TODO: find a better way to do this
+            if (validPositions.size() > 0) {
+                randomIndex = randomNumber.nextInt(validPositions.size());
+                startPosition = validPositions.get(randomIndex);
+            } else {
+                startPosition = null;
+            }
         }
 
-        Ship newShip = new Ship(randomDimension, randomOrientation, startPosition);
+        Ship newShip;
+
+        if (startPosition != null) {
+            newShip = new Ship(randomDimension, randomOrientation, startPosition);
+        } else {
+            newShip = null;
+        }
 
         return newShip;
     }

@@ -74,6 +74,7 @@ public class BattleShipGrid {
             System.out.print("\n");
         }
 
+        System.out.println();
     }
 
     /**
