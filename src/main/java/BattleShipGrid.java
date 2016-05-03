@@ -42,7 +42,7 @@ public class BattleShipGrid {
      * Function that draws the grid in the terminal
      */
     public void displayGrid() {
-        System.out.printf("%2s |", "");
+        System.out.printf("\n%2s |", "");
 
         for (int count = 0; count < this.verticalDimension; count++) {
             System.out.printf("%2d |", count);
@@ -98,14 +98,6 @@ public class BattleShipGrid {
      */
     public boolean isFull() {
         return this.full;
-    }
-
-    /**
-     * Get the number of occupied cells in the grid
-     * @return occupiedCellsCurrentNumber {int}
-     */
-    public int getOccupiedCellCurrentNumber() {
-        return this.occupiedCellsCurrentNumber;
     }
 
     /**

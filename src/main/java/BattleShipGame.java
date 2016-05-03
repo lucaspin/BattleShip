@@ -15,11 +15,11 @@ public class BattleShipGame {
     // This variable will indicate if the game has ended
     private boolean ended = false;
 
+    // This variable will indicate the number of guesses the user has made
+    private int numberOfGuesses = 0;
+
     // This variable will hold the reference to the grid
     private BattleShipGrid grid;
-
-    // The pattern that will aplly to the user guess
-    private String PATTERN_USER_GUESS = "^\\d{1,2}-\\d{1,2}$";
 
     // This list will hold the valid positions for ships of a dimension of 1 unit
     private List<Cell> validPositionsForUnitShip = new ArrayList<>();
@@ -61,7 +61,6 @@ public class BattleShipGame {
         System.out.println("==> Your job is to destroy them all!");
         System.out.println("==> To guess a position of the grid, you should use this format: {number}-{number}");
         System.out.println("==> Good luck!");
-        System.out.println();
     }
 
     /**
@@ -121,7 +120,7 @@ public class BattleShipGame {
      * @return validPositionsList {ArrayList}
      */
     private ArrayList<Cell> calculateInitialValidHorizontalPositions(int dimension) {
-        ArrayList<Cell> validPositionsList = new ArrayList<Cell>();
+        ArrayList<Cell> validPositionsList = new ArrayList<>();
 
         for (int x = 0; x < (this.grid.getHorizontalDimension() - dimension + 1); x++) {
             for (int y = 0; y < this.grid.getVerticalDimension(); y++) {
@@ -156,7 +155,6 @@ public class BattleShipGame {
      * @param newShip the ship that was just added
      */
     private void updateValidVerticalPositionsMap(Ship newShip) {
-        ShipDimensions newShipDimension = newShip.getDimension();
 
         switch(newShip.getOrientation()) {
             case HORIZONTAL:
@@ -218,8 +216,6 @@ public class BattleShipGame {
         int yStartPoint = newShip.getStartPosition().getY();
         int xStartPoint = newShip.getStartPosition().getX();
         int keyDimension = key.getValue();
-        int horizDimension = this.grid.getHorizontalDimension();
-        int vertDimension = this.grid.getVerticalDimension();
 
         switch (orientation) {
             case HORIZONTAL:
@@ -263,7 +259,7 @@ public class BattleShipGame {
     }
 
     public void initGame() {
-        Cell userGuess = null;
+        Cell userGuess;
 
         while(!this.isEnded()) {
             userGuess = null;
@@ -272,6 +268,7 @@ public class BattleShipGame {
                 userGuess = this.getUserGuess();
             }
 
+            this.numberOfGuesses++;
             GridCell guessedCell = this.grid.getGrid()[userGuess.getX()][userGuess.getY()];
 
             if (guessedCell.isAlreadyGuessed()) {
@@ -309,7 +306,8 @@ public class BattleShipGame {
 
                     // Check if game has ended
                     if (this.grid.getShips().size() == 0) {
-                        System.out.println("==> You destroyed all the ships! Game over!");
+                        System.out.println("==> You destroyed all the ships!");
+                        System.out.println("==> Number of guesses: " + this.numberOfGuesses);
                         this.setEnded(true);
                     }
                 }
@@ -337,10 +335,6 @@ public class BattleShipGame {
                 this.updateValidVerticalPositionsMap(newShip);
             }
         }
-    }
-
-    public List<Cell> getValidPositionsForUnitShip() {
-        return this.validPositionsForUnitShip;
     }
 
     /**
@@ -397,15 +391,15 @@ public class BattleShipGame {
      * Ask the user for a guess
      * @return guess {Cell}
      */
-    public Cell getUserGuess() {
-        Cell userGuessCell = null;
-        String guess = null;
+    private Cell getUserGuess() {
+        Cell userGuessCell;
+        String guess;
 
         System.out.println("Inform your next guess: ");
         guess = SCANNER.nextLine();
 
         // Check if user guess follows the pattern
-        if (Pattern.matches(PATTERN_USER_GUESS, guess)) {
+        if (Pattern.matches("^\\d{1,2}-\\d{1,2}$", guess)) {
             int splitPoint = guess.indexOf("-");
             int xPoint = Integer.parseInt(guess.substring(0, splitPoint));
             int yPoint = Integer.parseInt(guess.substring(splitPoint + 1));
