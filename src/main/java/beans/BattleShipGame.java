@@ -1,5 +1,8 @@
 package main.java.beans;
 
+import main.java.ui.BattleShipMainFrame;
+
+import javax.swing.*;
 import java.util.regex.Pattern;
 import java.util.List;
 import java.util.ArrayList;
@@ -46,21 +49,16 @@ public class BattleShipGame {
 
             // Populate the grid
             this.populateGrid();
-            this.displayGameInfo();
-            this.grid.displayGrid();
-        }
-    }
 
-    /**
-     * Display information about the game to the user
-     */
-    private void displayGameInfo() {
-        System.out.println();
-        System.out.println("==> Welcome to BattleShip!");
-        System.out.println("==> There are " + this.grid.getShips().size() + " ships in the grid");
-        System.out.println("==> Your job is to destroy them all!");
-        System.out.println("==> To guess a position of the grid, you should use this format: {number}-{number}");
-        System.out.println("==> Good luck!");
+            // Create the ui
+            SwingUtilities.invokeLater(() -> {
+                BattleShipMainFrame mainFrame = new BattleShipMainFrame(this.grid.getGrid(),
+                                                                        this.grid.getHorizontalDimension(),
+                                                                        this.grid.getVerticalDimension());
+                mainFrame.setVisible(true);
+                mainFrame.displayGrid();
+            });
+        }
     }
 
     /**
@@ -313,7 +311,6 @@ public class BattleShipGame {
                 }
             }
 
-            this.grid.displayGrid();
         }
 
         SCANNER.close();

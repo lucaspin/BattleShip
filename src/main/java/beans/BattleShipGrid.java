@@ -39,45 +39,6 @@ public class BattleShipGrid {
     }
 
     /**
-     * Function that draws the grid in the terminal
-     */
-    public void displayGrid() {
-        System.out.printf("\n%2s |", "");
-
-        for (int count = 0; count < this.verticalDimension; count++) {
-            System.out.printf("%2d |", count);
-        }
-
-        System.out.println();
-
-        for (int verticalCount = 0; verticalCount < this.verticalDimension; verticalCount++) {
-            for (int horizontalCount = 0; horizontalCount < this.horizontalDimension; horizontalCount++) {
-
-                if (horizontalCount == 0) {
-
-                    // Display the separators
-                    for (int count = 0; count <= this.horizontalDimension; count++) {
-                        System.out.printf("%1s%1s", "–––", "");
-                    }
-
-                    // Go to next line
-                    System.out.println();
-                }
-
-                if (horizontalCount == 0) {
-                    System.out.printf("%2s |", verticalCount);
-                }
-
-                // Print the symbols
-                System.out.printf("%2s |", this.grid[horizontalCount][verticalCount].getDisplayValue().getValue());
-            }
-            System.out.print("\n");
-        }
-
-        System.out.println();
-    }
-
-    /**
      * Set the max number of occupied cells, according to the grid's dimension
      */
     private void setOccupiedCellsMaxNumber() {
