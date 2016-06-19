@@ -7,7 +7,7 @@ import java.awt.Color;
 /**
  * @author Lucas Pinheiro @lucaspin
  */
-public class GameInfoPanel extends JPanel {
+class GameInfoPanel extends JPanel {
     private JLabel gameInfo;
     final String WELCOME_MESSAGE = "Welcome to BattleShip!";
 

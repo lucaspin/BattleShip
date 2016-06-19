@@ -70,4 +70,12 @@ public class BattleShipMainFrame extends JFrame {
         this.battleShipMainPanel.displayGrid();
     }
 
+    /**
+     * Display game info to the user.
+     * @param text {String}
+     */
+    public void setGameInfoText(String text) {
+        this.gameInfoPanel.setGameInfoText(text);
+    }
+
 }
