@@ -1,8 +1,5 @@
 package main.java.beans;
 
-import main.java.beans.Cell;
-import main.java.beans.GridCellDisplayValues;
-
 /**
  * @author lucaspinheiro
  */
