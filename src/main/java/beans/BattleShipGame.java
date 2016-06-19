@@ -1,4 +1,4 @@
-package main.java;
+package main.java.beans;
 
 import java.util.regex.Pattern;
 import java.util.List;

@@ -1,4 +1,4 @@
-package main.java;
+package main.java.beans;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class Ship {
             this.orientation = orientation;
             this.startPosition = startPosition;
         } else {
-            System.out.println("[main.java.Ship.constructor] Invalid parameters");
+            System.out.println("[main.java.beans.Ship.constructor] Invalid parameters");
         }
     }
 

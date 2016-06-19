@@ -1,4 +1,4 @@
-package main.java;
+package main.java.beans;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class BattleShipGrid {
             this.initGrid();
             this.setOccupiedCellsMaxNumber();
         } else {
-            System.out.println("[main.java.BattleShipGrid.constructor] dimensions must be positive");
+            System.out.println("[main.java.beans.BattleShipGrid.constructor] dimensions must be positive");
         }
     }
 
@@ -176,7 +176,7 @@ public class BattleShipGrid {
                 this.setFull(true);
             }
         } else {
-            System.out.println("[main.java.BattleShipGrid.BattleShipGrid.addShip] the startPosition of the ship isn't part of the grid");
+            System.out.println("[main.java.beans.BattleShipGrid.BattleShipGrid.addShip] the startPosition of the ship isn't part of the grid");
         }
     }
 

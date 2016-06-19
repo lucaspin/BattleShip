@@ -1,4 +1,4 @@
-package main.java;
+package main.java.beans;
 
 /**
  * @author lucaspinheiro
@@ -17,7 +17,7 @@ public class Cell {
             this.x = x;
             this.y = y;
         } else {
-            System.out.println("[main.java.Cell.constructor] params must be equal or greater than zero");
+            System.out.println("[main.java.beans.Cell.constructor] params must be equal or greater than zero");
         }
     }
 
@@ -29,7 +29,7 @@ public class Cell {
         if (newX >= 0) {
             this.x = newX;
         } else {
-            System.out.println("[main.java.Cell.constructor] param must be equal or greater than 0");
+            System.out.println("[main.java.beans.Cell.constructor] param must be equal or greater than 0");
         }
     }
 
@@ -41,7 +41,7 @@ public class Cell {
         if (newY >= 0) {
             this.y = newY;
         } else {
-            System.out.println("[main.java.Cell.constructor] param must be equal or greater than 0");
+            System.out.println("[main.java.beans.Cell.constructor] param must be equal or greater than 0");
         }
     }
 
