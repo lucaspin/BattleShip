@@ -33,8 +33,12 @@ class BattleShipMainPanel extends JPanel {
      */
     private void setInitialOpts() {
         this.setLayout(new GridLayout(this.hDimension, this.vDimension));
-        this.setPreferredSize(new Dimension(BattleShipMainFrame.DEFAULT_WIDTH, BattleShipMainFrame.DEFAULT_HEIGHT));
-        this.setBorder(new EmptyBorder(new Insets(20, 20, 20, 20)));
+
+        int width = BattleShipMainFrame.DEFAULT_WIDTH - 50;
+        int height = ((3 * BattleShipMainFrame.DEFAULT_HEIGHT) / 4) - 50;
+
+        this.setPreferredSize(new Dimension(width , height));
+        this.setBorder(new EmptyBorder(new Insets(0, 5, 5, 5)));
     }
 
     /**
