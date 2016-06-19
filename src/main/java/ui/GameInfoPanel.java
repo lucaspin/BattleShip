@@ -1,7 +1,6 @@
 package main.java.ui;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.Dimension;
 import java.awt.Color;
 

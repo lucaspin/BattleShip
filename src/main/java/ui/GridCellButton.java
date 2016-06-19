@@ -1,7 +1,5 @@
 package main.java.ui;
 
-import main.java.beans.GridCell;
-
 import javax.swing.JButton;
 
 /**

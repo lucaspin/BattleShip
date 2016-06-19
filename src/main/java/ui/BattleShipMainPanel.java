@@ -1,6 +1,5 @@
 package main.java.ui;
 
-import main.java.beans.BattleShipGrid;
 import main.java.beans.GridCell;
 
 import javax.swing.JPanel;
