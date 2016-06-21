@@ -1,3 +1,3 @@
 # BattleShip
 
-A simple BattleShip terminal game, built in Java
+A simple BattleShip game, built in Java
