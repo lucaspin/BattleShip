@@ -1,5 +1,7 @@
 package main.java.ui;
 
+import main.java.beans.GameMessages;
+
 import javax.swing.*;
 import java.awt.Dimension;
 import java.awt.Color;
@@ -9,14 +11,13 @@ import java.awt.Color;
  */
 class GameInfoPanel extends JPanel {
     private JLabel gameInfo;
-    final String WELCOME_MESSAGE = "Welcome to BattleShip!";
 
     /**
      * Constructor of the class
      */
     GameInfoPanel() {
         this.setInitialOpts();
-        this.gameInfo = new JLabel(WELCOME_MESSAGE);
+        this.gameInfo = new JLabel(GameMessages.WELCOME);
         this.gameInfo.setHorizontalAlignment(SwingConstants.CENTER);
         this.gameInfo.setVerticalAlignment(SwingConstants.CENTER);
         this.add(this.gameInfo);

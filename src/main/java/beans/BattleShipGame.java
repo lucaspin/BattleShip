@@ -1,22 +1,24 @@
 package main.java.beans;
 
-import main.java.ui.BattleShipMainFrame;
+import main.java.controller.BattleShipGameController;
 
-import javax.swing.*;
-import java.util.regex.Pattern;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Scanner;
 import java.util.Random;
 
 /**
  * @author lucaspinheiro
  */
 public class BattleShipGame {
+    private BattleShipGameController controller;
+
     // This variable will indicate if the game has ended
-    private boolean ended = false;
+    private AtomicBoolean ended;
+
+    private AtomicBoolean waitingUserGuess;
 
     // This variable will indicate the number of guesses the user has made
     private int numberOfGuesses = 0;
@@ -33,7 +35,7 @@ public class BattleShipGame {
     // This map will hold the valid positions for horizontal ships of 1+ dimensions
     private Map<ShipDimensions, ArrayList<Cell>> validHorizontalPositionsMap = new HashMap<>();
 
-    private Scanner SCANNER = new Scanner(System.in);
+    public Thread threadObject;
 
     /**
      * @constructor
@@ -43,22 +45,27 @@ public class BattleShipGame {
     public BattleShipGame(int gridVerticalDimension, int gridHorizontalDimension) {
         if (this.isVerticalGridDimensionValid(gridVerticalDimension) && this.isHorizontalGridDimensionValid(gridHorizontalDimension)) {
             this.grid = new BattleShipGrid(gridVerticalDimension, gridVerticalDimension);
+            this.setEnded(new AtomicBoolean(false));
+            this.setWaitingForUserGuess(new AtomicBoolean(false));
 
             // Create map to store valid start positions for ships
             this.createValidPositionsMaps();
 
             // Populate the grid
             this.populateGrid();
-
-            // Create the ui
-            SwingUtilities.invokeLater(() -> {
-                BattleShipMainFrame mainFrame = new BattleShipMainFrame(this.grid.getGrid(),
-                                                                        this.grid.getHorizontalDimension(),
-                                                                        this.grid.getVerticalDimension());
-                mainFrame.setVisible(true);
-                mainFrame.displayGrid();
-            });
         }
+    }
+
+    public boolean getWaitingForUserGuess() {
+        return this.waitingUserGuess.get();
+    }
+
+    public void setWaitingForUserGuess(AtomicBoolean bool) {
+        this.waitingUserGuess = bool;
+    }
+
+    public BattleShipGrid getBattleShipGrid() {
+        return this.grid;
     }
 
     /**
@@ -256,64 +263,31 @@ public class BattleShipGame {
         }
     }
 
+    public int getNumberOfGuesses() {
+        return this.numberOfGuesses;
+    }
+
     public void initGame() {
-        Cell userGuess;
-
-        while(!this.isEnded()) {
-            userGuess = null;
-
-            while (userGuess == null) {
-                userGuess = this.getUserGuess();
-            }
-
-            this.numberOfGuesses++;
-            GridCell guessedCell = this.grid.getGrid()[userGuess.getX()][userGuess.getY()];
-
-            if (guessedCell.isAlreadyGuessed()) {
-                System.out.println("==> You have already guessed this cell!");
-            } else if (guessedCell.isEmpty()) {
-                System.out.println("==> You hit water!");
-                guessedCell.setAlreadyGuessed(true);
-                guessedCell.setDisplayValue(GridCellDisplayValues.GUESS_EMPTY);
-            } else {
-                System.out.println("==> You got a hit!");
-                guessedCell.setAlreadyGuessed(true);
-                guessedCell.setDisplayValue(GridCellDisplayValues.GUESS_NON_EMPTY);
-
-                // Find the ship to which that cell belongs
-                Ship hitShip = null;
-
-                for (Ship ship : this.grid.getShips()) {
-                    for (Cell shipPart : ship.getParts()) {
-                        if (shipPart.getX() == guessedCell.getX() && shipPart.getY() == guessedCell.getY()) {
-                            hitShip = ship;
-                        }
-                    }
-                }
-
-                // Remove the ship
-                if (hitShip != null) {
-                    hitShip.removePart(guessedCell);
-
-                    // Check if ship was destroyed
-                    if (hitShip.getParts().size() == 0) {
-                        System.out.println("==> Congrats! You destroyed a ship!");
-                        this.grid.removeShip(hitShip);
-                        System.out.println("==> There are " + this.grid.getShips().size() + " remaining.");
-                    }
-
-                    // Check if game has ended
-                    if (this.grid.getShips().size() == 0) {
-                        System.out.println("==> You destroyed all the ships!");
-                        System.out.println("==> Number of guesses: " + this.numberOfGuesses);
-                        this.setEnded(true);
+        Runnable runnable = () -> {
+            while (!this.isEnded()) {
+                if(this.getWaitingForUserGuess()) {
+                    synchronized(threadObject) {
+                        try {
+                            threadObject.wait();
+                        } catch (InterruptedException e) {}
                     }
                 }
             }
 
-        }
+            this.controller.closeWindow();
+        };
 
-        SCANNER.close();
+        this.threadObject = new Thread(runnable);
+        threadObject.start();
+    }
+
+    public void setController(BattleShipGameController controller) {
+        this.controller = controller;
     }
 
     /**
@@ -385,39 +359,6 @@ public class BattleShipGame {
     }
 
     /**
-     * Ask the user for a guess
-     * @return guess {Cell}
-     */
-    private Cell getUserGuess() {
-        Cell userGuessCell;
-        String guess;
-
-        System.out.println("Inform your next guess: ");
-        guess = SCANNER.nextLine();
-
-        // Check if user guess follows the pattern
-        if (Pattern.matches("^\\d{1,2}-\\d{1,2}$", guess)) {
-            int splitPoint = guess.indexOf("-");
-            int xPoint = Integer.parseInt(guess.substring(0, splitPoint));
-            int yPoint = Integer.parseInt(guess.substring(splitPoint + 1));
-
-            if (xPoint < this.grid.getHorizontalDimension() && yPoint < this.grid.getVerticalDimension()) {
-                userGuessCell = new Cell(xPoint, yPoint);
-            } else {
-                System.out.println("==> Your guess does not fit into this grid!");
-                userGuessCell = null;
-            }
-
-        } else {
-            System.out.println("==> Your guess does not follow the supported format.");
-            System.out.println("==> Remember: A guess must be a number followed by a hiphen followed by a number.");
-            userGuessCell = null;
-        }
-
-        return userGuessCell;
-    }
-
-    /**
      * Check whether a dimension is a valid vertical dimension for the grid
      * @param dimension the dimension to check
      * @return {boolean}
@@ -448,18 +389,25 @@ public class BattleShipGame {
     }
 
     /**
+     * Increase the number of guesses when the user clicks on a cell button
+     */
+    public void increaseNumberOfGuesses() {
+        this.numberOfGuesses++;
+    }
+
+    /**
      * Check if the game has ended
      * @return ended if the game has ended
      */
     public boolean isEnded() {
-        return this.ended;
+        return this.ended.get();
     }
 
     /**
      * Set the game status
      * @param ended whether end the game or not
      */
-    public void setEnded(boolean ended) {
+    public void setEnded(AtomicBoolean ended) {
         this.ended = ended;
     }
 }
